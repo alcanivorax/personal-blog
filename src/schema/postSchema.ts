@@ -1,16 +1,21 @@
 import { z } from "zod";
 
-export const postSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .max(200)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase with hyphens only"),
-  content: z.string().min(1, "Content is required"),
-  coverImage: z.string().url().optional().or(z.literal("")),
+export const postCreateSchema = z.object({
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  content: z.string().min(1),
   published: z.boolean().optional(),
+  coverImage: z.string().url().optional().or(z.literal("")),
   categories: z.array(z.string()).optional(),
+  expectedReadTime: z.number().optional(),
 });
 
-export type PostInput = z.infer<typeof postSchema>;
+export const postUpdateSchema = z.object({
+  title: z.string().optional(),
+  slug: z.string().optional(),
+  content: z.string().optional(),
+  published: z.boolean().optional(),
+  coverImage: z.string().url().optional().or(z.literal("")),
+  categories: z.array(z.string()).optional(),
+  expectedReadTime: z.number().optional(),
+});

@@ -50,15 +50,25 @@ export default function CreatePost() {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        router.push(`/post/${data.slug}`);
-      } else {
-        alert("Failed to create post");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle specific error cases
+        if (response.status === 409) {
+          alert("A post with this slug already exists");
+        } else if (response.status === 400) {
+          alert(`Validation error: ${data.error || "Invalid data"}`);
+        } else {
+          alert(data.error || "Failed to create post");
+        }
+        return;
       }
+
+      // Success - navigate to the post
+      router.push(`/post/${data.post.slug}`); // Fixed: data.post.slug, not data.slug
     } catch (error) {
       console.error("Error creating post:", error);
-      alert("An error occurred while creating the post");
+      alert("Network error - please check your connection and try again");
     } finally {
       setIsSubmitting(false);
     }

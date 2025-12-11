@@ -2,7 +2,7 @@
 
 export default function DeleteButton({ id }: { id: number }) {
   const handleDelete = async () => {
-    await fetch(`/api/post/${id}`, {
+    const deleted = await fetch(`/api/post/${id}`, {
       method: "DELETE",
     });
 

@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 type FormState = {
   title: string;
@@ -9,12 +9,30 @@ type FormState = {
   content: string;
   coverImage: string;
   categories: string;
-  expectedReadTime: string;
+  expectedReadTime: number | "";
 };
 
-export default function CreatePostPage() {
+type Category = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+type Post = {
+  title: string;
+  slug: string;
+  content: string;
+  coverImage: string | null;
+  categories: Category[];
+  expectedReadTime: number | null;
+};
+
+export default function EditPostClient({ id }: { id: number }) {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState<FormState>({
     title: "",
@@ -25,6 +43,47 @@ export default function CreatePostPage() {
     expectedReadTime: "",
   });
 
+  // ✅ FETCH POST (GET)
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchPost() {
+      try {
+        const res = await fetch(`/api/post/${id}`, {
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          setError("Post not found");
+          setInitialLoading(false);
+          return;
+        }
+
+        const { post }: { post: Post } = await res.json();
+
+        setForm({
+          title: post.title,
+          slug: post.slug,
+          content: post.content,
+          coverImage: post.coverImage ?? "",
+          categories: post.categories.map((c) => c.name).join(", "),
+
+          expectedReadTime: post.expectedReadTime ?? "",
+        });
+
+        setInitialLoading(false);
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          setError("Network error");
+          setInitialLoading(false);
+        }
+      }
+    }
+
+    fetchPost();
+    return () => controller.abort();
+  }, [id]);
+
   function updateField(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -33,18 +92,22 @@ export default function CreatePostPage() {
     setForm((prev) => ({
       ...prev,
       [name]: name === "expectedReadTime" ? Number(value) || "" : value,
-      ...(name === "title" && !prev.slug ? { slug: slugify(value) } : {}),
     }));
   }
 
+  // ✅ UPDATE POST (PUT)
   async function submit(published: boolean) {
-    if (!form.title || !form.slug || !form.content) return;
+    if (!form.title || !form.slug || !form.content) {
+      setError("Title, slug, and content are required");
+      return;
+    }
 
     setLoading(true);
+    setError(null);
 
     try {
-      const res = await fetch("/api/post", {
-        method: "POST",
+      const res = await fetch(`/api/post/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
@@ -60,27 +123,38 @@ export default function CreatePostPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error ?? "Failed to create post");
+        setError(data.error ?? "Failed to update post");
+        setLoading(false);
         return;
       }
 
       router.push(`/post/${data.post.slug}`);
-    } finally {
+    } catch {
+      setError("Network error");
       setLoading(false);
     }
+  }
+
+  if (initialLoading) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-20 text-sm text-neutral-500">
+        Loading post…
+      </div>
+    );
   }
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-20">
       {/* Header */}
-      <header className="mb-12 border-b border-black/10 dark:border-white/15 pb-6">
+      <header className="mb-12 border-b border-black/10 pb-6">
         <p className="text-[11px] font-mono tracking-widest text-neutral-500">
-          ADMIN • CREATE
+          ADMIN • EDIT • {id}
         </p>
-        <h1 className="text-[28px] font-medium tracking-tight">New Post</h1>
+        <h1 className="text-[28px] font-medium tracking-tight">Edit Post</h1>
       </header>
 
-      {/* Form */}
+      {error && <div className="mb-6 text-sm text-red-600">{error}</div>}
+
       <div className="space-y-8">
         <Field label="Title">
           <input
@@ -88,7 +162,6 @@ export default function CreatePostPage() {
             value={form.title}
             onChange={updateField}
             className="input"
-            placeholder="Post title"
           />
         </Field>
 
@@ -98,7 +171,6 @@ export default function CreatePostPage() {
             value={form.slug}
             onChange={updateField}
             className="input font-mono"
-            placeholder="post-slug"
           />
         </Field>
 
@@ -108,7 +180,6 @@ export default function CreatePostPage() {
             value={form.coverImage}
             onChange={updateField}
             className="input"
-            placeholder="https://image.url"
           />
         </Field>
 
@@ -118,7 +189,6 @@ export default function CreatePostPage() {
             value={form.categories}
             onChange={updateField}
             className="input"
-            placeholder="tech, systems, design"
           />
         </Field>
 
@@ -129,7 +199,6 @@ export default function CreatePostPage() {
             value={form.expectedReadTime}
             onChange={updateField}
             className="input"
-            placeholder="5"
             min={1}
           />
         </Field>
@@ -141,26 +210,24 @@ export default function CreatePostPage() {
             value={form.content}
             onChange={updateField}
             className="textarea font-mono"
-            placeholder="# Write here…"
           />
         </Field>
 
-        {/* Actions */}
         <div className="flex gap-4 pt-6">
           <button
             onClick={() => submit(false)}
-            disabled={loading}
             className="btn-secondary"
+            disabled={loading}
           >
-            {loading ? "Saving…" : "Save Draft"}
+            Save Draft
           </button>
 
           <button
             onClick={() => submit(true)}
-            disabled={loading}
             className="btn-primary"
+            disabled={loading}
           >
-            {loading ? "Publishing…" : "Publish"}
+            Update & Publish
           </button>
         </div>
       </div>
@@ -168,16 +235,7 @@ export default function CreatePostPage() {
   );
 }
 
-/* Utils */
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-/* Small layout primitive */
+/* Field helper */
 function Field({
   label,
   children,

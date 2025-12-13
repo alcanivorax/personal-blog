@@ -96,6 +96,47 @@ export async function PUT(
   }
 }
 
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: idString } = await context.params;
+    const id = Number(idString);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return NextResponse.json(
+        { error: "Invalid or missing ID" },
+        { status: 400 }
+      );
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id },
+      select: {
+        title: true,
+        slug: true,
+        content: true,
+        coverImage: true,
+        categories: true,
+        expectedReadTime: true,
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ post }, { status: 200 });
+  } catch (error) {
+    console.error("GET post error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch post" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }

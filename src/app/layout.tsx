@@ -3,18 +3,24 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { geistMono } from "@/lib/fonts";
-import { fontSans } from "@/lib/fonts";
+import { mono } from "@/lib/fonts";
+import { sans } from "@/lib/fonts";
+import { SearchCommand } from "@/components/SearchCommand";
+import prisma from "@/lib/prisma";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    select: { id: true, title: true, slug: true },
+  });
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistMono.variable} ${fontSans.variable} antialiased bg-stone-100 dark:bg-black transition-colors`}
+        className={`${mono.variable} ${sans.variable} antialiased bg-stone-100 dark:bg-black transition-colors`}
       >
         <ThemeProvider
           attribute="class"
@@ -23,6 +29,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
+          <SearchCommand posts={posts} />
           {children}
         </ThemeProvider>
       </body>

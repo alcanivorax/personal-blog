@@ -1,3 +1,4 @@
+export const revalidate = 60;
 import { PostCard } from "@/components/layout/PostCard";
 import prisma from "@/lib/prisma";
 

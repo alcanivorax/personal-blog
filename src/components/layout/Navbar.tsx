@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className="border-b border-gray-200 bg-stone-100 dark:border-neutral-800 dark:bg-neutral-950">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* App Name */}
           <Link

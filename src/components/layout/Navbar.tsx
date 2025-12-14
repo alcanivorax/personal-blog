@@ -108,7 +108,7 @@ export default function Navbar() {
 
             {/* GitHub */}
             <Link
-              href="https://github.com"
+              href="https://github.com/roshan6022/personal-blog"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-gray-900 transition-colors

@@ -361,3 +361,9 @@ pre code {
   padding: 0.6rem 1.2rem;
   border: 1px solid rgba(0, 0, 0, 0.3);
 }
+
+/* AuthWindow */
+
+.auth {
+  cursor: url("https://cur.cursors-4u.net/cursors/cur-2/cur132.cur"), auto;
+}

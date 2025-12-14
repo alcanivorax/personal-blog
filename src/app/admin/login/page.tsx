@@ -1,11 +1,11 @@
 "use client";
-console.log("THIS IS THE REAL HEADER");
 
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import AuthWindow from "@/components/layout/AuthWindow";
 import Input from "@/components/layout/Input";
 import { loginSchema } from "@/schema/loginSchema";
+import { retro } from "@/lib/fonts";
 
 export default function Login() {
   const router = useRouter();
@@ -66,9 +66,9 @@ export default function Login() {
   };
 
   return (
-    <div className="auth">
+    <div className={retro.className}>
       <div className="min-h-screen flex items-center justify-center bg-[#C0C0C0]">
-        <AuthWindow title="Login - Pokemon">
+        <AuthWindow title="Login - Light">
           <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
             <Input
               value={username}

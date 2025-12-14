@@ -12,6 +12,8 @@ import {
 import { useRouter } from "next/navigation";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TextAlignStart } from "lucide-react";
+import { Kbd } from "./ui/kbd";
+import { CornerDownLeft } from "lucide-react";
 
 type SearchItem = {
   id: number;
@@ -39,15 +41,13 @@ export function SearchCommand({ posts }: { posts: SearchItem[] }) {
     <CommandDialog open={open} onOpenChange={setOpen}>
       <DialogTitle className="sr-only">Search</DialogTitle>
       <CommandInput placeholder="Search posts…" />
-
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-
         <CommandGroup heading="Posts">
           {posts.map((post) => (
             <CommandItem
               key={post.id}
-              value={post.title} // 🔥 THIS is what gets searched
+              value={post.title}
               onSelect={() => {
                 router.push(`/post/${post.slug}`);
                 setOpen(false);
@@ -57,7 +57,6 @@ export function SearchCommand({ posts }: { posts: SearchItem[] }) {
             </CommandItem>
           ))}
         </CommandGroup>
-
         <CommandGroup heading="Pages">
           <CommandItem
             value="About"
@@ -70,6 +69,19 @@ export function SearchCommand({ posts }: { posts: SearchItem[] }) {
           </CommandItem>
         </CommandGroup>
       </CommandList>
+      <div className="flex items-center justify-end gap-6 px-4 py-2 border-t border-border text-xs text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span>Go to page</span>
+          <Kbd>
+            <CornerDownLeft />
+          </Kbd>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span>Exit</span>
+          <Kbd>Esc</Kbd>
+        </div>
+      </div>
     </CommandDialog>
   );
 }

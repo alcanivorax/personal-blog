@@ -1,4 +1,3 @@
-import React from "react";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";

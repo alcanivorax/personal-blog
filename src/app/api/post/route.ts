@@ -104,8 +104,6 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating post:", error);
-
     // Handle Prisma-specific errors
     if (error && typeof error === "object" && "code" in error) {
       // Unique constraint violation (shouldn't happen with our logic, but just in case)

@@ -20,8 +20,7 @@ export async function PUT(
 
     const body = await request.json();
     const validation = postUpdateSchema.safeParse(body);
-    console.log("THIS IS BODY: ", body);
-    console.log("THIS IS VALIDATION: ", validation);
+
     if (!validation.success) {
       return NextResponse.json(
         { error: "Validation failed", details: validation.error.issues },
@@ -69,7 +68,7 @@ export async function PUT(
       },
       include: { categories: true },
     });
-    console.log("Thisis updated post: ", updatedPost);
+
     return NextResponse.json(
       { message: "Post updated successfully", post: updatedPost },
       { status: 200 }
@@ -88,7 +87,6 @@ export async function PUT(
       }
     }
 
-    console.error("Update error:", error);
     return NextResponse.json(
       { error: "Failed to update post" },
       { status: 500 }
@@ -129,7 +127,6 @@ export async function GET(
 
     return NextResponse.json({ post }, { status: 200 });
   } catch (error) {
-    console.error("GET post error:", error);
     return NextResponse.json(
       { error: "Failed to fetch post" },
       { status: 500 }
@@ -166,7 +163,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    console.error("Delete error:", error);
     return NextResponse.json(
       { error: "Server error deleting post" },
       { status: 500 }

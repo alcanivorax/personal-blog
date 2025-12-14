@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { loginSchema } from "@/schema/loginSchema";
-import { z } from "zod";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -73,7 +72,6 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (err) {
-    console.error(err);
     return NextResponse.json(
       { success: false, error: "Server error" },
       { status: 500 }

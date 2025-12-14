@@ -2,28 +2,21 @@ import { NextResponse, NextRequest } from "next/server";
 
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   // Redirect unauthenticated users from protected routes
   const isAuthenticated = request.cookies.get("admin-token");
 
   if (pathname.startsWith("/admin") && !isAuthenticated) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-  // use env
-  // Proxy: GET all posts
-  // /api/post → https://user-service.example.com/post
+
   if (pathname === "/api/post") {
-    const url = new URL("/post", "https://user-service.example.com");
+    const url = new URL("/post", BACKEND_URL);
     return NextResponse.rewrite(url);
   }
 
-  // Proxy: GET/UPDATE/DELETE single post
-  // /api/post/123 → https://user-service.example.com/post/123
   if (pathname.startsWith("/api/post/")) {
-    const url = new URL(
-      pathname.replace("/api/post", "/post"),
-      "https://user-service.example.com"
-    );
+    const url = new URL(pathname.replace("/api/post", "/post"), BACKEND_URL);
     return NextResponse.rewrite(url);
   }
 
@@ -41,10 +34,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/admin/post/:path*",
-    "/admin",
-    // Catches all admin routes
-    "/api/post/:path*", // Catches all API post routes
-  ],
+  matcher: ["/admin/post/:path*", "/admin", "/api/post/:path*"],
 };

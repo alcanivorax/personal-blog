@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Search, Github } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import Link from "next/link";
+import { Kbd } from "../ui/kbd";
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -15,7 +16,7 @@ export default function Navbar() {
     return null; // ⬅️ prevents hydration mismatch
   }
   return (
-    <nav className="border-b border-gray-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+    <nav className="border-b border-gray-200 bg-stone-100 dark:border-neutral-800 dark:bg-neutral-950">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* App Name */}
@@ -24,7 +25,7 @@ export default function Navbar() {
             className="text-xl font-medium text-gray-700 hover:text-gray-900 transition-colors
                        dark:text-neutral-300 dark:hover:text-white"
           >
-            Blog
+            Light
           </Link>
 
           {/* Right Side */}
@@ -69,15 +70,15 @@ export default function Navbar() {
               </button>
 
               {/* Shortcut hint */}
-              <kbd
+              <Kbd
                 className="absolute right-7 top-1/2 -translate-y-1/2
                text-[14px] rounded mr-1
                bg-gray-100 text-gray-600
                dark:bg-neutral-800 dark:text-neutral-400"
               >
-                <span className="px-2 text-[17px]">⌘</span>
-                <span className="px-2">K</span>
-              </kbd>
+                <span className="pr-1 text-[17px]">⌘</span>
+                <span className="pl-1.5">K</span>
+              </Kbd>
             </div>
 
             {/* Search icon (mobile) */}

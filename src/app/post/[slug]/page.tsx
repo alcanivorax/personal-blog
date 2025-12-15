@@ -1,8 +1,10 @@
+export const revalidate = 60;
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
 import { CodeCopyScript } from "@/components/CodeCopyScript";
 import { randomNumber } from "@/lib/randomNumber";
+
 
 interface PageProps {
   params: Promise<{
@@ -59,7 +61,7 @@ export default async function Page({ params }: PageProps) {
         <div className="mb-20 border border-black/10 dark:border-white/15 relative">
           <img
             src={post.coverImage}
-            className="w-full object-cover grayscale-50 hover:grayscale-25 transition duration-500"
+            className="w-sm h-sm object-cover grayscale-50 hover:grayscale-25 transition duration-500"
           />
 
           <div className="absolute top-2 left-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm px-2 py-[2px] text-[10px] font-mono tracking-wider border border-black/10 dark:border-white/15">

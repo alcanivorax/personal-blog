@@ -296,6 +296,7 @@ pre code {
   height: 28px;
 
   border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 20%;
   background: white;
   color: #444;
 
@@ -312,21 +313,6 @@ pre code {
 .code-copy-btn.copied {
   opacity: 1;
   animation: copy-pulse 0.35s ease;
-}
-
-@keyframes copy-pulse {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(0.9);
-  }
-  70% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 
 .dark .code-copy-btn {
@@ -367,3 +353,21 @@ pre code {
 .auth {
   cursor: url("https://cur.cursors-4u.net/cursors/cur-2/cur132.cur"), auto;
 }
+
+/* TEMP */
+
+/* 
+@keyframes copy-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.9);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+} */

@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { mono } from "@/lib/fonts";
 import { sans } from "@/lib/fonts";
 import { SearchCommand } from "@/components/SearchCommand";
-import prisma from "@/lib/prisma";
+import { posts } from "@/lib/search-posts";
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    select: { id: true, title: true, slug: true },
-  });
   return (
     <html lang="en" suppressHydrationWarning>
       <body

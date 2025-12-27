@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Search, Github } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import Link from "next/link";
-import { Kbd } from "../ui/kbd";
+import { Kbd } from "@/components/ui/kbd";
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -108,7 +108,7 @@ export default function Navbar() {
 
             {/* GitHub */}
             <Link
-              href="https://github.com/roshan6022/personal-blog"
+              href="https://github.com/alcanivorax/personal-blog"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-gray-900 transition-colors
